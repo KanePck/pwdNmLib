@@ -75,21 +75,23 @@ bool faceRecn1(string& fnCsv, string& faceLogFn)
 	// face recognition and train it with the images and
 	// labels read from the given CSV file.
 	Ptr<LBPHFaceRecognizer> model = LBPHFaceRecognizer::create();
+	model->setThreshold(10.0);
 	model->train(images, labels);
 	// The following line predicts the label of a given
 	// test image:
 	model->predict(faceLog, predictLabel, predictConfd);
-	printf("Predicted class = %d / Actual class = %d.", predictLabel, testLabel);
-	if (predictConfd <= 28)
-	{
+	printf("Predicted class = %d / Actual class = %d", predictLabel, testLabel);
+	cout << "Confidence value: " << (100-predictConfd) << "\n";
+	double x = 100-predictConfd;
+	if (x > 20.0) {
 		facePass = true;
-		cout << "Your face login is accepted and successful with predicted confidence level: " << (100 - predictConfd) << "%\n";
+		cout << "Your face login is accepted and successful with predicted confidence level: " << x << "\n";
+	} else {
+		cout << "Your face login is not accepted and failed with predicted confidene level: " << x << "\n";
 	}
-	else
-		cout << "Your face login is not accepted and failed with predicted confidene level: " << (100 - predictConfd) << "%\n";
 	return facePass;
 }
-bool faceRecn(string& fn_csv, string& faceLogFn) {
+/*bool faceRecn(string& fn_csv, string& faceLogFn) {
 	// These vectors hold the images and corresponding labels.
 	vector<Mat> images;
 	vector<int> labels;
@@ -160,7 +162,7 @@ bool faceRecn(string& fn_csv, string& faceLogFn) {
 		cout << "Your face login is accepted and successful with predicted confidence level: " << (100 - predictConfd) << "%\n";
 	}
 	else
-		cout << "Your face login is not accepted and failed with predicted confidene level: " << (100 - predictConfd) << "%\n";
+		cout << "Your face login is not accepted and failed with predicted confidence level: " << (100 - predictConfd) << "%\n";
 	//string result_message = format("Predicted class = %d / Actual class = %d.", predictedLabel, testLabel);
 	//cout << result_message << endl;
 	// First we'll use it to set the threshold of the LBPHFaceRecognizer
@@ -194,7 +196,7 @@ bool faceRecn(string& fn_csv, string& faceLogFn) {
 	// We could get the histograms for example:
 	vector<Mat> histograms = model->getHistograms();
 	// But should I really visualize it? Probably the length is interesting:
-	cout << "Size of the histograms: " << histograms[0].total() << endl;
-	*/
+	//cout << "Size of the histograms: " << histograms[0].total() << endl;
+	
 	return facePass;
-}
+}*/
