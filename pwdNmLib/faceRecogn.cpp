@@ -74,21 +74,31 @@ bool faceRecn1(string& fnCsv, string& faceLogFn)
 	// The following lines create an LBPH model for
 	// face recognition and train it with the images and
 	// labels read from the given CSV file.
-	Ptr<LBPHFaceRecognizer> model = LBPHFaceRecognizer::create();
-	model->setThreshold(10.0);
-	model->train(images, labels);
-	// The following line predicts the label of a given
-	// test image:
-	model->predict(faceLog, predictLabel, predictConfd);
-	printf("Predicted class = %d / Actual class = %d", predictLabel, testLabel);
-	cout << "Confidence value: " << (100-predictConfd) << "\n";
-	double x = 100-predictConfd;
-	if (x > 20.0) {
-		facePass = true;
-		cout << "Your face login is accepted and successful with predicted confidence level: " << x << "\n";
-	} else {
-		cout << "Your face login is not accepted and failed with predicted confidene level: " << x << "\n";
+	try {
+		Ptr<LBPHFaceRecognizer> model = LBPHFaceRecognizer::create();
+		
+		model->setThreshold(65.0); //Default threshold value is 123.0
+		
+		model->train(images, labels);
+		// The following line predicts the label of a given
+		// test image:
+		model->predict(faceLog, predictLabel, predictConfd);
+		
+		printf("Predicted class = %d / Actual class = %d", predictLabel, testLabel);
+		cout << "Confidence value: " << predictConfd << "\n" << std::flush;
+		
+		if (predictConfd <= 60.0) {
+			facePass = true;
+			cout << "Your face login is accepted and successful with predicted confidence level: " << predictConfd << "\n";
+		}
+		else {
+			cout << "Your face login is not accepted and failed with predicted confidence level: " << predictConfd << "\n";
+		}
+	} 
+	catch (const cv::Exception& e) {
+		cerr << "Exception during prediction: " << e.msg << endl;
 	}
+	
 	return facePass;
 }
 /*bool faceRecn(string& fn_csv, string& faceLogFn) {

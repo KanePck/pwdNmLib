@@ -37,13 +37,13 @@ bool logFace(const char* userName)
 	if (!faceRecn1(csvFn, faceLogFn))
 	{
 		message="Face login failed.\nPlease try again!\n";
-		coutMessHdlr();
+		//coutMessHdlr();
 		return false;
 	}
 	else
 	{
 		message="Face login successful.\n";
-		coutMessHdlr();
+		//coutMessHdlr();
 		return true;
 	}
 }
