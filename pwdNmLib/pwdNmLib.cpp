@@ -12,13 +12,15 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <filesystem>
 #include "pwdNmLib.h"
 #include "Random.h"
 
 // Use the cv and std namespaces
 using namespace cv;
 using namespace std;
-
+//using namespace fs;
+namespace fs = filesystem;
 string message{};
 bool faceRecn1(string& fn_csv, string& faceLogFn);
 //int client(const char* servIpAddr, const char* message);
@@ -31,8 +33,27 @@ string coutMessHdlr() {
 bool logFace(const char* userName)
 {
 	string uName(userName);
-	string faceLogFn = "C:/Users/k_pic/source/repos/ExpressPwdNoMore/public/images/loginPhoto/" + uName + ".png";
-	string csvFn = "C:/Users/k_pic/source/repos/ExpressPwdNoMore/public/images/csv/" + uName + ".txt";
+	// Define the base directory and subdirectory 
+	fs::path baseDir = fs::current_path();
+	fs::path subDir1 = "public/images/loginPhoto";
+	fs::path subDir2 = "public/images/csv";
+	fs::path fullPath1 = baseDir / subDir1;
+	fs::path fullPath2 = baseDir / subDir2;
+	// Create the directory 
+	if (!fs::exists(fullPath1)) { 
+	    fs::create_directory(fullPath1); 
+		std::cout << "Directory created: " << fullPath1 << std::endl; 
+	}
+	if (!fs::exists(fullPath2)) {
+		 fs::create_directory(fullPath2);
+		 std::cout << "Directory created: " << fullPath1 << std::endl;
+	}
+	fs::path filePath1 = fullPath1 / (uName + ".png");
+	fs::path filePath2 = fullPath2 / (uName + ".txt");
+	string filePathStr1 = filePath1.string();
+	string filePathStr2 = filePath2.string();
+	string faceLogFn = filePathStr1; //"1FirstPass/public/images/loginPhoto/" + uName + ".png";
+	string csvFn = filePathStr2; //"1FirstPass/public/images/csv/" + uName + ".txt";
 	//To validate face login
 	if (!faceRecn1(csvFn, faceLogFn))
 	{
