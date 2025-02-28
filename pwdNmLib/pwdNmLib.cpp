@@ -91,11 +91,11 @@ string genPwd(int nc, bool cap, bool num, bool sChar)
 		sCharAscii = Random::get(32, 47);
 		rd.push_back(static_cast<char>(sCharAscii));
 	}
-	for (int i = 0; i < nc; ++i)
+	for (int j = 0; j < nc; ++j)
 	{
 		rd.push_back(static_cast<char>(Random::get(32, 126)));
 	}
-	for (int i = 0; i < rd.size(); ++i)
+	for (vector<char>::size_type i = 0; i < rd.size(); ++i)
 	{
 		pwd = pwd + rd[i];
 	}
